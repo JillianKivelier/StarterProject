@@ -1,4 +1,4 @@
-# using a file converted into a base64 string
+# using a file , from USER INPUT, converted into a base64 string
 from openai import AzureOpenAI
 import base64
 client = AzureOpenAI(
@@ -12,7 +12,7 @@ def convert_to_base64(image_path):
     file_read = file_text.read()
     return base64.b64encode(file_read).decode("utf-8")
 
-image_path = "tester.jpg"
+image_path = input("Enter a file path\n")
 image_base64 = convert_to_base64(image_path)
 prompt = "Generate alternative text for the image"
 
