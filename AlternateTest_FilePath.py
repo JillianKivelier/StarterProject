@@ -1,9 +1,6 @@
-from tkinter import *
-from tkinter import ttk
-from tkinter import filedialog
-import base64
-
+# using a file , from USER INPUT, converted into a base64 string
 from openai import AzureOpenAI
+import base64
 
 # client set up, setting neccessary credentials for upcoming API call
 client = AzureOpenAI(
@@ -11,38 +8,21 @@ client = AzureOpenAI(
     api_version="2024-02-15-preview",
     azure_endpoint="https://corp-enit-enterprise-openai.openai.azure.com/"
 )
-def open_file():
-    # Opens a file dialog and returns the selected file path
-    file_path1 = filedialog.askopenfilename()
-    if file_path1:
-        file = f"{file_path1}"
-        return file
-
+# function to encode image, open, read, encode then decode to python string
 def convert_to_base64(image_path):
     file_text = open(image_path, 'rb')
     file_read = file_text.read()
     return base64.b64encode(file_read).decode("utf-8")
 
-loop = 1
-while loop == 1:
-    root = Tk()
-    root.title("Upload File")
-    
+# prompts user for file path and stores it
+image_path = input("Enter a file path\n")
+image_base64 = convert_to_base64(image_path)
+prompt = "Generate alternative text for the image"
 
-    command = open_file()
-    button_open = ttk.Button(root, text = "Select file", command=command)
-    button_open.pack(pady=10)
-
-    print(f"Selected file: {command}")
-
-    image_base64 = convert_to_base64(command)
-    prompt = "Generate alternative text for the image"
-
-    # API Call to openai , chat_completion stores response 
-
-    chat_completion = client.chat.completions.create(
-    # converstaion passed to ai with prompt from user along with instructions to guide response (system)
-        messages=[
+# API Call to openai , chat_completion stores response 
+chat_completion = client.chat.completions.create(
+# converstaion passed to ai with prompt from user along with instructions to guide response (system)
+    messages=[
         
             {"role": "user","content": [
                 {"type": "text", "text": prompt},
@@ -58,7 +38,4 @@ while loop == 1:
     max_tokens=250
 )
 
-    print(chat_completion.choices[0].message.content)
-
-
-    root.mainloop()
+print(chat_completion.choices[0].message.content)
