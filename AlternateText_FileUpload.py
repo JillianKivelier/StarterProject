@@ -12,12 +12,17 @@ client = AzureOpenAI(
     api_version="2024-02-15-preview",
     azure_endpoint="https://corp-enit-enterprise-openai.openai.azure.com/"
 )
+#sets up the main application window
 root = Tk()
 root.title("Upload File")
-    
+
+
 def convert_to_base64(image_path):
     file_text = open(image_path, 'rb')
+    # reads file as binary
     file_read = file_text.read()
+    # converts binary data into base-64 encoded bytes 
+    # then converts bytes into a string
     return base64.b64encode(file_read).decode("utf-8")
 
 def open_file():
@@ -48,8 +53,10 @@ def open_file():
         )
 
     print(chat_completion.choices[0].message.content)
-
+# Opens a file dialog and returns the selected file path
 button_open = ttk.Button(root, text = "Select file", command=open_file)
 button_open.pack(pady=20)
+
+
 
 root.mainloop()
